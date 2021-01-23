@@ -1,5 +1,5 @@
 // To maximize tonal functionality when translating chromatics into pitch classes we adopt the convention that
-// relative to a minor key we will include b2, #4, #7, #3, #6
+// relative to a minor key we will include b2, #4, #7, #3, #6 //TODO: should #3 be #2?
 // relative to a major key we will include b7, #1, #2, #4, #5
 // which allows for maximum use of secondary dominants and mixture of major mode into minor
 
@@ -43,7 +43,7 @@ const pitchClassMidi = {
 };
 
 // Object maps midi note values mod12 to their pitch class equivalents by key
-const midiPitchClass = {
+const midiPitchClass = { //TODO:this might need to be rethought, some seem wrong according to line2,3
     Fb: ["C", "Db", "Ebb", "Eb", "Fb", "F", "Gb", "G", "Ab", "Bbb", "Bb", "Cb"],
     Cb: ["C", "Db", "D", "Eb", "Fb", "F", "Gb", "G", "Ab", "Bbb", "Bb", "Cb"],
     Gb: ["C", "Db", "D", "Eb", "Fb", "F", "Gb", "G", "Ab", "A", "Bb", "Cb"],
@@ -96,11 +96,16 @@ const transposeMidiArray = (inputArray, semitones) => {
     let newArray = inputArray.map(note => parseInt(note) + parseInt(semitones));
     return newArray;
 };
+//√//const transposeMidiArray = (inputArray, semitones) => inputArray.map(note => parseInt(note) + parseInt(semitones));
+
 // converts pitch class to midi note value
+
 const pitchClassToMidi = pitchClass => {
     let x = pitchClassMidi[pitchClass];
     return x;
 };
+//√// const pitchClassToMidi = pitchClass=>pitchClassMidi[pitchClass]
+
 // converts a scientificly notated pitch to midi
 const pitchToMidi = pitch => {
     let x = pitch.split(".");
@@ -108,6 +113,7 @@ const pitchToMidi = pitch => {
     // console.log("math", 12 * (parseInt(x[1]) + 1));
     return pitchClassToMidi(x[0]) + 12 * (parseInt(x[1]) + 1);
 };
+
 // converts a pitch array to midi array
 const pitchArrayToMidi = pitchArray => {
     let returnArray = [];
@@ -117,18 +123,23 @@ const pitchArrayToMidi = pitchArray => {
     });
     return returnArray;
 };
+//√// const pitchArrayToMidi = pitchArray=> pitchArray.map(pitch=>pitchToMidi(pitch))
 
 // converts a midi note to it's pitch class in a given key
 const pitchClass = (noteIn, key) => {
     let pClass = noteIn % 12;
     return midiPitchClass[key][pClass];
 };
+//√// const pitchClass = (noteIn, key) => midiPitchClass[key][ noteIn % 12];
+
 //   converts a midi note to it's scientific pitch
 const evalPitch = (noteIn, key) => {
     let pClass = pitchClass(noteIn, key);
     let octave = Math.floor(noteIn / 12) - 1;
     return pClass + "." + octave;
 };
+//√// const evalPitch = (noteIn, key) => { return `${pitchClass(noteIn, key)}.${Math.floor(noteIn / 12) - 1}` }
+
 // converts midi to scientific pitch
 const evalPitchArray = (midiArray, key) => {
     let returnArray = [];
@@ -138,7 +149,10 @@ const evalPitchArray = (midiArray, key) => {
     });
     return returnArray;
 };
+//√// const evalPitchArray = (midiArray, key) => midiArray.map(pitch=>evalPitch(pitch, key))
+
 // we want to work with our data in dual form, both scientific pitch and midi concurrently
+//TODO: add functions for immediately formattingDual from either midiArray or pitchArray
 const formatDual = (midiArray, pitchArray) => {
     let returnArray = [];
     midiArray.forEach((value, index) => {
@@ -147,7 +161,8 @@ const formatDual = (midiArray, pitchArray) => {
     });
     return returnArray;
 };
-//
+//√// const formatDual = (midiArray, pitchArray) => midiArray.map((mv, i) => { return { midi: mv, pitch: pitchArray[i] } })
+//TESTING BOOKMARK
 const deltaIntervalArray = midiArray => {
     let deltaArray = [];
     for (let i = 0; i + 1 < midiArray.length; i++) {

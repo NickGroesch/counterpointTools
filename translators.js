@@ -240,14 +240,12 @@ const measureInterval = (firstDual, secondDual) => {//THIS OUTPUT IS UGLY
 const deltaDual = dualArray => {
     let dualDeltaArray = [];
     for (let i = 0; i + 1 < dualArray.length; i++) {
-        let value = measureInterval(dualArray[i + 1], dualArray[i]);
-        // console.log(`test1of${i}`, dualArray[i + 1]);
-        // console.log(`test2of${i}`, dualArray[i]);
-        // console.log(`test3of${i}`, value);
+        let value = measureInterval(dualArray[i], dualArray[i + 1]);
         dualDeltaArray.push(value);
     }
     return dualDeltaArray;
 };
+
 // *
 const intervalCompare = (dualArray1, dualArray2) => {
     let shorterArray = dualArray1.length >= dualArray2.length ? dualArray2 : dualArray1

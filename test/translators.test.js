@@ -108,5 +108,14 @@ describe("Translators", () => {
                 expect(interval).toEqual(["asc", "maj", "second", 2]);
             });
         });
+        describe(".deltaDual []DUAL => []INTERVAL", () => { //TODO: add a base 7 type
+            it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return [["asc", "maj", "second", 2]]`, () => {
+                const duals = [
+                    { midi: 60, pitch: 'C.4' },
+                    { midi: 62, pitch: 'D.4' }]
+                const intervals = Translators.deltaDual(duals)
+                expect(intervals).toEqual([["asc", "maj", "second", 2]]);
+            });
+        });
     })
 })

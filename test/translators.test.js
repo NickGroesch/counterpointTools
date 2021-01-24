@@ -114,6 +114,13 @@ describe("Translators", () => {
                 expect(deltas.length).toBe(midinotes.length - 1)
             });
         });
+        describe(".deltaInterval (MIDI,MIDI) => DELTA", () => {
+            it("should take [60, 62] and return 2", () => {
+                const midinotes = [60, 62]
+                const deltas = Translators.deltaInterval(...midinotes)
+                expect(deltas).toEqual(2);
+            });
+        });
         describe(".pitchBase (SCIENTIFIC) => BASE7", () => { //TODO: add a base 7 type
             it("should take 'E.4' and return 30", () => {
                 const scientific = 'E.4'

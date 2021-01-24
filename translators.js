@@ -171,6 +171,7 @@ const deltaIntervalArray = midiArray => {//THIS IS ACTUALLY ONLY BEING USED TO M
     }
     return deltaArray;
 };
+const deltaInterval = (firstMidi, secondMidi) => parseInt(secondMidi) - parseInt(firstMidi)
 // to measure intervals we need to assess them in base7
 // let test = "E.1";
 
@@ -211,7 +212,7 @@ const measureInterval = (firstDual, secondDual) => {//THIS OUTPUT IS UGLY
         prefix += " comp";
         pitchDiff = pitchDiff % 7;
     }
-    let midiDiff = deltaIntervalArray([firstDual.midi, secondDual.midi])[0];//TODO: replace this with an atomic function, since its being used that way//This was  backwards too
+    let midiDiff = deltaInterval(firstDual.midi, secondDual.midi)
     let quality = {
         unison: { 0: "perf", 1: "aug", 11: "dim" },
         second: { 0: "dim", 1: "min", 2: "maj", 3: "aug" },
@@ -353,6 +354,7 @@ const translators = {
     formatDualFromMidi,
     formatDualFromScientific,
     deltaIntervalArray,
+    deltaInterval,
     pitchBase,
     deltaDual,
     measureInterval,

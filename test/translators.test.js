@@ -83,7 +83,7 @@ describe("Translators", () => {
         });
     })
     describe("Should provide a nuanced way to work with intervals, both simultaneously and successively ", () => {
-        describe(".deltaIntervalArray []MIDINOTE => []DELTAS", () => {
+        describe(".deltaIntervalArray ([]MIDINOTE) => []DELTAS", () => {
             it("should take [60, 62, 64, 66] and return [2,2,2]", () => {
                 const midinotes = [60, 62, 64, 66]
                 const deltas = Translators.deltaIntervalArray(midinotes)
@@ -91,7 +91,7 @@ describe("Translators", () => {
                 expect(deltas.length).toBe(midinotes.length - 1)
             });
         });
-        describe(".pitchBase SCIENTIFIC => BASE7", () => { //TODO: add a base 7 type
+        describe(".pitchBase (SCIENTIFIC) => BASE7", () => { //TODO: add a base 7 type
             it("should take 'E.4' and return 30", () => {
                 const scientific = 'E.4'
                 const base7 = Translators.pitchBase(scientific)
@@ -99,23 +99,44 @@ describe("Translators", () => {
                 expect(base7).toBe(30);
             });
         });
-        describe(".measureInter SCIENTIFIC => BASE7", () => { //TODO: add a base 7 type
+        describe(".measureInter (SCIENTIFIC) => BASE7", () => { //TODO: add a base 7 type
             it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return ["asc", "maj", "second", 2]`, () => {
-                const duals = [
-                    { midi: 60, pitch: 'C.4' },
-                    { midi: 62, pitch: 'D.4' }]
+                const duals = [{ midi: 60, pitch: 'C.4' }, { midi: 62, pitch: 'D.4' }]
                 const interval = Translators.measureInterval(...duals)
                 expect(interval).toEqual(["asc", "maj", "second", 2]);
             });
         });
-        describe(".deltaDual []DUAL => []INTERVAL", () => { //TODO: add a base 7 type
+        describe(".deltaDual (DUAL,DUAL) => []INTERVAL", () => { //TODO: add a base 7 type
             it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return [["asc", "maj", "second", 2]]`, () => {
-                const duals = [
-                    { midi: 60, pitch: 'C.4' },
-                    { midi: 62, pitch: 'D.4' }]
+                const duals = [{ midi: 60, pitch: 'C.4' }, { midi: 62, pitch: 'D.4' }]
                 const intervals = Translators.deltaDual(duals)
                 expect(intervals).toEqual([["asc", "maj", "second", 2]]);
+            });
+        })
+        describe(".deltaDual ([]DUAL) => []INTERVAL", () => { //TODO: add a base 7 type
+            it(`should take [{ midi: 60, pitch: 'C.4' }, { midi: 62, pitch: 'D.4' }, { midi: 64, pitch: 'E.4' }] and return [["asc", "maj", "second", 2]["asc", "maj", "second", 2]]`, () => {
+                const duals = [{ midi: 60, pitch: 'C.4' }, { midi: 62, pitch: 'D.4' }, { midi: 64, pitch: 'E.4' }]
+                const intervals = Translators.deltaDual(duals)
+                console.log('case1', intervals)
+
+                expect(intervals).toEqual([["asc", "maj", "second", 2], ["asc", "maj", "second", 2]]);
+            });
+            it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return [["asc", "maj", "second", 2]]`, () => {
+                const duals = [{ midi: 67, pitch: 'G.4' }, { midi: 65, pitch: 'F.4' }, { midi: 67, pitch: 'G.4' }]
+                const intervals = Translators.deltaDual(duals)
+                console.log('case2', intervals)
+                expect(intervals).toEqual([["desc", "maj", "second", -2], ["asc", "maj", "second", 2]]);
+            });
+
+        });
+        describe(".assessMotion ([]INTERVAL,[]INTERVAL) => []MOTION", () => { //TODO: add a base 7 type
+            it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return [["asc", "maj", "second", 2]]`, () => {
+                const intervals1 = [["asc", "maj", "second", 2], ["asc", "maj", "second", 2]]
+                const intervals2 = [["desc", "maj", "second", -2], ["asc", "maj", "second", 2]]
+                const motions = Translators.assessMotion(intervals1, intervals2)
+                expect(motions).toEqual(["contrary", "parallel"]);
             });
         });
     })
 })
+// })

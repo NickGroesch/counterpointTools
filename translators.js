@@ -161,7 +161,8 @@ const evalPitchArray = (midiArray, key) => midiArray.map(pitch => evalPitch(pitc
 //     return returnArray;
 // };
 const formatDual = (midiArray, pitchArray) => midiArray.map((mv, i) => { return { midi: mv, pitch: pitchArray[i] } })
-
+const formatDualFromMidi = (midiArray, key) => formatDual(midiArray, evalPitchArray(midiArray, key))
+const formatDualFromScientific = scientificArray => formatDual(pitchArrayToMidi(scientificArray), scientificArray)
 const deltaIntervalArray = midiArray => {//THIS IS ACTUALLY ONLY BEING USED TO MEASURE 2unit ( or `twunit`) lists, but it is extensible
     let deltaArray = [];
     for (let i = 0; i + 1 < midiArray.length; i++) {
@@ -349,6 +350,8 @@ const translators = {
     evalPitch,
     evalPitchArray,
     formatDual,
+    formatDualFromMidi,
+    formatDualFromScientific,
     deltaIntervalArray,
     pitchBase,
     deltaDual,

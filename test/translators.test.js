@@ -59,7 +59,7 @@ describe("Translators", () => {
                 expect(sixtyInKeyOfC).toEqual('C.4');
             });
         });
-        describe(".evalPitchArray ([]MIDINOTE) => []SCIENTIFIC", () => {
+        describe(".evalPitchArray ([]MIDINOTE, KEY) => []SCIENTIFIC", () => {
             it("should map [60, 62, 64, 66] in the key of C to ['C.4', 'D.4', 'E.4', 'Fs.4']", () => {
                 const midinotes = [60, 62, 64, 66]
                 const key = "G"
@@ -74,6 +74,29 @@ describe("Translators", () => {
                 const midinotes = [60, 62, 64, 66]
                 const dualsPhrase = Translators.formatDual(midinotes,
                     Translators.evalPitchArray(midinotes, "G"))
+                expect(dualsPhrase).toEqual([
+                    { midi: 60, pitch: 'C.4' },
+                    { midi: 62, pitch: 'D.4' },
+                    { midi: 64, pitch: 'E.4' },
+                    { midi: 66, pitch: 'Fs.4' }]);
+            });//TODO: revise descriptions above in light of new typology
+        });
+        describe(".formatDualFromMidi ([]MIDINOTE) => []DUAL", () => {
+            it("should zip [60, 62, 64, 66] in G into an array of objects", () => {
+                const midinotes = [60, 62, 64, 66]
+                const key = 'G'
+                const dualsPhrase = Translators.formatDualFromMidi(midinotes, key)
+                expect(dualsPhrase).toEqual([
+                    { midi: 60, pitch: 'C.4' },
+                    { midi: 62, pitch: 'D.4' },
+                    { midi: 64, pitch: 'E.4' },
+                    { midi: 66, pitch: 'Fs.4' }]);
+            });//TODO: revise descriptions above in light of new typology
+        });
+        describe(".formatDualFromScientific ([]SCIENTIFIC) => []DUAL", () => {
+            it("should zip ['C.4', 'D.4', 'E.4', 'Fs.4'] into an array of objects", () => {
+                const scientifics = ['C.4', 'D.4', 'E.4', 'Fs.4']
+                const dualsPhrase = Translators.formatDualFromScientific(scientifics)
                 expect(dualsPhrase).toEqual([
                     { midi: 60, pitch: 'C.4' },
                     { midi: 62, pitch: 'D.4' },

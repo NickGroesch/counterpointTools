@@ -12,6 +12,10 @@ the layers of the translator utility have some distinctions of whether they proc
 - INTERVAL[], which are ***UGLY NOW*** [prefixSTR, qualitySTR, %b7doff, b7diff] eg. `["asc","perf",4,4]`
 * TODO change these to objects=> lots of dependencies on this structure in tests.js, so make jests first
 - MOTION [], which are arrays of str e.g "parallel"
+- KEY
+- KEYSIGNATURE
+- BASE7
+
 
 ## INTERFACE METHODS (actually used) and their stacks
 - **transposeMidiArray()**

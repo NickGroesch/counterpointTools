@@ -91,20 +91,19 @@ const midiPitchClass = { //TODO:this might need to be rethought, some seem wrong
 
 // We will require translators between midi note values and scientific pitch notation, as well as scientific pitch to lilypond
 
-// transposes a midi array (returns midi array)
-const transposeMidiArray = (inputArray, semitones) => {
-    let newArray = inputArray.map(note => parseInt(note) + parseInt(semitones));
-    return newArray;
-};
-//√//const transposeMidiArray = (inputArray, semitones) => inputArray.map(note => parseInt(note) + parseInt(semitones));
+// //transposes a midi array (returns midi array)
+// const transposeMidiArray = (inputArray, semitones) => {
+//     let newArray = inputArray.map(note => parseInt(note) + parseInt(semitones));
+//     return newArray;
+// };
+const transposeMidiArray = (inputArray, semitones) => inputArray.map(note => parseInt(note) + parseInt(semitones));
 
-// converts pitch class to midi note value
-
-const pitchClassToMidi = pitchClass => {
-    let x = pitchClassMidi[pitchClass];
-    return x;
-};
-//√// const pitchClassToMidi = pitchClass=>pitchClassMidi[pitchClass]
+// //converts pitch class to midi note value
+// const pitchClassToMidi = pitchClass => {
+//     let x = pitchClassMidi[pitchClass];
+//     return x;
+// };
+const pitchClassToMidi = pitchClass => pitchClassMidi[pitchClass]
 
 // converts a scientificly notated pitch to midi
 const pitchToMidi = pitch => {
@@ -114,54 +113,54 @@ const pitchToMidi = pitch => {
     return pitchClassToMidi(x[0]) + 12 * (parseInt(x[1]) + 1);
 };
 
-// converts a pitch array to midi array
-const pitchArrayToMidi = pitchArray => {
-    let returnArray = [];
-    pitchArray.forEach(pitch => {
-        let midiVal = pitchToMidi(pitch);
-        returnArray.push(midiVal);
-    });
-    return returnArray;
-};
-//√// const pitchArrayToMidi = pitchArray=> pitchArray.map(pitch=>pitchToMidi(pitch))
+//// converts a pitch array to midi array
+// const pitchArrayToMidi = pitchArray => {
+//     let returnArray = [];
+//     pitchArray.forEach(pitch => {
+//         let midiVal = pitchToMidi(pitch);
+//         returnArray.push(midiVal);
+//     });
+//     return returnArray;
+// };
+const pitchArrayToMidi = pitchArray => pitchArray.map(pitch => pitchToMidi(pitch))
 
-// converts a midi note to it's pitch class in a given key
-const pitchClass = (noteIn, key) => {
-    let pClass = noteIn % 12;
-    return midiPitchClass[key][pClass];
-};
-//√// const pitchClass = (noteIn, key) => midiPitchClass[key][ noteIn % 12];
+//// converts a midi note to it's pitch class in a given key
+// const pitchClass = (noteIn, key) => {
+//     let pClass = noteIn % 12;
+//     return midiPitchClass[key][pClass];
+// };
+const pitchClass = (noteIn, key) => midiPitchClass[key][noteIn % 12];
 
-//   converts a midi note to it's scientific pitch
-const evalPitch = (noteIn, key) => {
-    let pClass = pitchClass(noteIn, key);
-    let octave = Math.floor(noteIn / 12) - 1;
-    return pClass + "." + octave;
-};
-//√// const evalPitch = (noteIn, key) => { return `${pitchClass(noteIn, key)}.${Math.floor(noteIn / 12) - 1}` }
+// //   converts a midi note to it's scientific pitch
+// const evalPitch = (noteIn, key) => {
+//     let pClass = pitchClass(noteIn, key);
+//     let octave = Math.floor(noteIn / 12) - 1;
+//     return pClass + "." + octave;
+// };
+const evalPitch = (noteIn, key) => { return `${pitchClass(noteIn, key)}.${Math.floor(noteIn / 12) - 1}` }
 
-// converts midi to scientific pitch
-const evalPitchArray = (midiArray, key) => {
-    let returnArray = [];
-    midiArray.forEach(noteIn => {
-        let pitch = evalPitch(noteIn, key);
-        returnArray.push(pitch);
-    });
-    return returnArray;
-};
-//√// const evalPitchArray = (midiArray, key) => midiArray.map(pitch=>evalPitch(pitch, key))
+// // converts midi to scientific pitch
+// const evalPitchArray = (midiArray, key) => {
+//     let returnArray = [];
+//     midiArray.forEach(noteIn => {
+//         let pitch = evalPitch(noteIn, key);
+//         returnArray.push(pitch);
+//     });
+//     return returnArray;
+// };
+const evalPitchArray = (midiArray, key) => midiArray.map(pitch => evalPitch(pitch, key))
 
-// we want to work with our data in dual form, both scientific pitch and midi concurrently
-//TODO: add functions for immediately formattingDual from either midiArray or pitchArray
-const formatDual = (midiArray, pitchArray) => {
-    let returnArray = [];
-    midiArray.forEach((value, index) => {
-        let object = { midi: value, pitch: pitchArray[index] };
-        returnArray.push(object);
-    });
-    return returnArray;
-};
-//√// const formatDual = (midiArray, pitchArray) => midiArray.map((mv, i) => { return { midi: mv, pitch: pitchArray[i] } })
+// // we want to work with our data in dual form, both scientific pitch and midi concurrently
+// //TODO: add functions for immediately formattingDual from either midiArray or pitchArray
+// const formatDual = (midiArray, pitchArray) => {
+//     let returnArray = [];
+//     midiArray.forEach((value, index) => {
+//         let object = { midi: value, pitch: pitchArray[index] };
+//         returnArray.push(object);
+//     });
+//     return returnArray;
+// };
+const formatDual = (midiArray, pitchArray) => midiArray.map((mv, i) => { return { midi: mv, pitch: pitchArray[i] } })
 
 const deltaIntervalArray = midiArray => {//THIS IS ACTUALLY ONLY BEING USED TO MEASURE 2unit ( or `twunit`) lists, but it is extensible
     let deltaArray = [];
@@ -330,14 +329,14 @@ const stupifier = (sciPitch, keySign) => {
     let abcReturn = abc[0].concat(octaveAdjust[parseInt(abc[1])])
     return abcReturn
 }
-const abcify = (dualsArray, keySign) => {
-    let abcReturn = []
-    dualsArray.forEach(value => {
-        abcReturn.push(stupifier(value.pitch, keySign))
-    })
-    return abcReturn
-}
-//√//const abcify = (dualsArray, keySign) => dualsArray.map(dual => stupifier(dual.pitch, keySign))
+// const abcify = (dualsArray, keySign) => {
+//     let abcReturn = []
+//     dualsArray.forEach(value => {
+//         abcReturn.push(stupifier(value.pitch, keySign))
+//     })
+//     return abcReturn
+// }
+const abcify = (dualsArray, keySign) => dualsArray.map(dual => stupifier(dual.pitch, keySign))
 
 const translators = {
     midiPitchClass,

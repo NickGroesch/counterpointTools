@@ -92,77 +92,34 @@ const midiPitchClass = { //TODO:this might need to be rethought, some seem wrong
 // We will require translators between midi note values and scientific pitch notation, as well as scientific pitch to lilypond
 
 // //transposes a midi array (returns midi array)
-// const transposeMidiArray = (inputArray, semitones) => {
-//     let newArray = inputArray.map(note => parseInt(note) + parseInt(semitones));
-//     return newArray;
-// };
 const transposeMidiArray = (inputArray, semitones) => inputArray.map(note => parseInt(note) + parseInt(semitones));
 
 // //converts pitch class to midi note value
-// const pitchClassToMidi = pitchClass => {
-//     let x = pitchClassMidi[pitchClass];
-//     return x;
-// };
 const pitchClassToMidi = pitchClass => pitchClassMidi[pitchClass]
 
 // converts a scientificly notated pitch to midi
 const pitchToMidi = pitch => {
     let x = pitch.split(".");
-    // console.log("pctm", pitchClassToMidi(x[0], key));
-    // console.log("math", 12 * (parseInt(x[1]) + 1));
     return pitchClassToMidi(x[0]) + 12 * (parseInt(x[1]) + 1);
 };
 
-//// converts a pitch array to midi array
-// const pitchArrayToMidi = pitchArray => {
-//     let returnArray = [];
-//     pitchArray.forEach(pitch => {
-//         let midiVal = pitchToMidi(pitch);
-//         returnArray.push(midiVal);
-//     });
-//     return returnArray;
-// };
+// // converts a pitch array to midi array
 const pitchArrayToMidi = pitchArray => pitchArray.map(pitch => pitchToMidi(pitch))
 
 //// converts a midi note to it's pitch class in a given key
-// const pitchClass = (noteIn, key) => {
-//     let pClass = noteIn % 12;
-//     return midiPitchClass[key][pClass];
-// };
 const pitchClass = (noteIn, key) => midiPitchClass[key][noteIn % 12];
 
 // //   converts a midi note to it's scientific pitch
-// const evalPitch = (noteIn, key) => {
-//     let pClass = pitchClass(noteIn, key);
-//     let octave = Math.floor(noteIn / 12) - 1;
-//     return pClass + "." + octave;
-// };
 const evalPitch = (noteIn, key) => { return `${pitchClass(noteIn, key)}.${Math.floor(noteIn / 12) - 1}` }
 
 // // converts midi to scientific pitch
-// const evalPitchArray = (midiArray, key) => {
-//     let returnArray = [];
-//     midiArray.forEach(noteIn => {
-//         let pitch = evalPitch(noteIn, key);
-//         returnArray.push(pitch);
-//     });
-//     return returnArray;
-// };
 const evalPitchArray = (midiArray, key) => midiArray.map(pitch => evalPitch(pitch, key))
 
 // // we want to work with our data in dual form, both scientific pitch and midi concurrently
-// //TODO: add functions for immediately formattingDual from either midiArray or pitchArray
-// const formatDual = (midiArray, pitchArray) => {
-//     let returnArray = [];
-//     midiArray.forEach((value, index) => {
-//         let object = { midi: value, pitch: pitchArray[index] };
-//         returnArray.push(object);
-//     });
-//     return returnArray;
-// };
 const formatDual = (midiArray, pitchArray) => midiArray.map((mv, i) => { return { midi: mv, pitch: pitchArray[i] } })
 const formatDualFromMidi = (midiArray, key) => formatDual(midiArray, evalPitchArray(midiArray, key))
 const formatDualFromScientific = scientificArray => formatDual(pitchArrayToMidi(scientificArray), scientificArray)
+
 const deltaIntervalArray = midiArray => {//THIS IS ACTUALLY ONLY BEING USED TO MEASURE 2unit ( or `twunit`) lists, but it is extensible
     let deltaArray = [];
     for (let i = 0; i + 1 < midiArray.length; i++) {
@@ -172,9 +129,8 @@ const deltaIntervalArray = midiArray => {//THIS IS ACTUALLY ONLY BEING USED TO M
     return deltaArray;
 };
 const deltaInterval = (firstMidi, secondMidi) => parseInt(secondMidi) - parseInt(firstMidi)
-// to measure intervals we need to assess them in base7
-// let test = "E.1";
 
+// to measure intervals we need to assess them in base7
 const pitchBase = scientific => {
     let x = scientific.split(".");
     let letter = x[0].split("")[0];
@@ -185,8 +141,7 @@ const pitchBase = scientific => {
 };
 // we need to be able to measure an interval in both midi and scientific pitch (for simultaneous firstDual is lower pitch)
 const measureInterval = (firstDual, secondDual) => {//THIS OUTPUT IS UGLY
-    //This function is atomic, but its using a list helper: deltaIntervalArray
-    let pitchDiff = pitchBase(secondDual.pitch) - pitchBase(firstDual.pitch);//THIS WAS BACKWARDS, but i never noticed because its only compared to itself as motion
+    let pitchDiff = pitchBase(secondDual.pitch) - pitchBase(firstDual.pitch);
     let prefix = "";
     let intervalMap = [
         "unison",
@@ -236,8 +191,7 @@ const measureInterval = (firstDual, secondDual) => {//THIS OUTPUT IS UGLY
     //   return prefix, quality[interval][midiDiff], interval;
     return [prefix, quality[interval][midiDiff], interval, tempMidiDiff];
 };
-// measureInterval({ pitch: "C.4", midi: 60 }, { pitch: "E.2", midi: 40 });
-//
+
 const deltaDual = dualArray => {
     let dualDeltaArray = [];
     for (let i = 0; i + 1 < dualArray.length; i++) {
@@ -331,13 +285,7 @@ const stupifier = (sciPitch, keySign) => {
     let abcReturn = abc[0].concat(octaveAdjust[parseInt(abc[1])])
     return abcReturn
 }
-// const abcify = (dualsArray, keySign) => {
-//     let abcReturn = []
-//     dualsArray.forEach(value => {
-//         abcReturn.push(stupifier(value.pitch, keySign))
-//     })
-//     return abcReturn
-// }
+
 const abcify = (dualsArray, keySign) => dualsArray.map(dual => stupifier(dual.pitch, keySign))
 
 const translators = {

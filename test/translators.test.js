@@ -129,11 +129,18 @@ describe("Translators", () => {
                 expect(base7).toBe(30);
             });
         });
-        describe(".measureInter (SCIENTIFIC) => BASE7", () => { //TODO: add a base 7 type
+        describe(".measureInterval (DUAL,DUAL) => INTERVAL", () => { //TODO: add a base 7 type
             it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return ["asc", "maj", "second", 2]`, () => {
                 const duals = [{ midi: 60, pitch: 'C.4' }, { midi: 62, pitch: 'D.4' }]
                 const interval = Translators.measureInterval(...duals)
                 expect(interval).toEqual(["asc", "maj", "second", 2]);
+            });
+        });
+        describe(".measureInterval (DUAL,DUAL) => INTERVAL", () => { //TODO: add a base 7 type
+            it(`should take [{ pitch: "C.4", midi: 60 }, { pitch: "E.2", midi: 40 }] and return ["desc comp", "min", "sixth", -20]`, () => {
+                const duals = [{ pitch: "C.4", midi: 60 }, { pitch: "E.2", midi: 40 }]
+                const interval = Translators.measureInterval(...duals)
+                expect(interval).toEqual(["desc comp", "min", "sixth", -20]);
             });
         });
         describe(".deltaDual (DUAL,DUAL) => []INTERVAL", () => { //TODO: add a base 7 type

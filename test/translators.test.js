@@ -1,4 +1,4 @@
-const { it } = require("@jest/globals");
+const { it, expect } = require("@jest/globals");
 const Translators = require("../translators");
 // STYLEGUIDE: use single quotes for javascript string values and 
 // double to delimit console strings (that may contain such values)
@@ -79,6 +79,33 @@ describe("Translators", () => {
                     { midi: 62, pitch: 'D.4' },
                     { midi: 64, pitch: 'E.4' },
                     { midi: 66, pitch: 'Fs.4' }]);
+            });//TODO: revise descriptions above in light of new typology
+        });
+    })
+    describe("Should provide a nuanced way to work with intervals, both simultaneously and successively ", () => {
+        describe(".deltaIntervalArray []MIDINOTE => []DELTAS", () => {
+            it("should take [60, 62, 64, 66] and return [2,2,2]", () => {
+                const midinotes = [60, 62, 64, 66]
+                const deltas = Translators.deltaIntervalArray(midinotes)
+                expect(deltas).toEqual([2, 2, 2]);
+                expect(deltas.length).toBe(midinotes.length - 1)
+            });
+        });
+        describe(".pitchBase SCIENTIFIC => BASE7", () => { //TODO: add a base 7 type
+            it("should take 'E.4' and return 30", () => {
+                const scientific = 'E.4'
+                const base7 = Translators.pitchBase(scientific)
+                expect(base7 % 7).toBe(2);
+                expect(base7).toBe(30);
+            });
+        });
+        describe(".measureInter SCIENTIFIC => BASE7", () => { //TODO: add a base 7 type
+            it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return ["asc", "maj", "second", 2]`, () => {
+                const duals = [
+                    { midi: 60, pitch: 'C.4' },
+                    { midi: 62, pitch: 'D.4' }]
+                const interval = Translators.measureInterval(...duals)
+                expect(interval).toEqual(["asc", "maj", "second", 2]);
             });
         });
     })

@@ -162,8 +162,8 @@ const formatDual = (midiArray, pitchArray) => {
     return returnArray;
 };
 //√// const formatDual = (midiArray, pitchArray) => midiArray.map((mv, i) => { return { midi: mv, pitch: pitchArray[i] } })
-//TESTING BOOKMARK
-const deltaIntervalArray = midiArray => {
+
+const deltaIntervalArray = midiArray => {//THIS IS ACTUALLY ONLY BEING USED TO MEASURE 2unit ( or `twunit`) lists, but it is extensible
     let deltaArray = [];
     for (let i = 0; i + 1 < midiArray.length; i++) {
         let midiDelta = parseInt(midiArray[i + 1]) - parseInt(midiArray[i]);
@@ -174,8 +174,8 @@ const deltaIntervalArray = midiArray => {
 // to measure intervals we need to assess them in base7
 // let test = "E.1";
 
-const pitchBase = pitch => {
-    let x = pitch.split(".");
+const pitchBase = scientific => {
+    let x = scientific.split(".");
     let letter = x[0].split("")[0];
     let octave = x[1];
     let pitchMap = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
@@ -183,8 +183,9 @@ const pitchBase = pitch => {
     return base;
 };
 // we need to be able to measure an interval in both midi and scientific pitch (for simultaneous firstDual is lower pitch)
-const measureInterval = (firstDual, secondDual) => {
-    let pitchDiff = pitchBase(firstDual.pitch) - pitchBase(secondDual.pitch);
+const measureInterval = (firstDual, secondDual) => {//THIS OUTPUT IS UGLY
+    //This function is atomic, but its using a list helper: deltaIntervalArray
+    let pitchDiff = pitchBase(secondDual.pitch) - pitchBase(firstDual.pitch);//THIS WAS BACKWARDS, but i never noticed because its only compared to itself as motion
     let prefix = "";
     let intervalMap = [
         "unison",
@@ -210,7 +211,7 @@ const measureInterval = (firstDual, secondDual) => {
         prefix += " comp";
         pitchDiff = pitchDiff % 7;
     }
-    let midiDiff = deltaIntervalArray([secondDual.midi, firstDual.midi])[0];
+    let midiDiff = deltaIntervalArray([firstDual.midi, secondDual.midi])[0];//TODO: replace this with an atomic function, since its being used that way//This was  backwards too
     let quality = {
         unison: { 0: "perf", 1: "aug", 11: "dim" },
         second: { 0: "dim", 1: "min", 2: "maj", 3: "aug" },
@@ -351,6 +352,7 @@ const translators = {
     evalPitchArray,
     formatDual,
     deltaIntervalArray,
+    pitchBase,
     deltaDual,
     measureInterval,
     intervalCompare,

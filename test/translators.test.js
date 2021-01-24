@@ -68,7 +68,7 @@ describe("Translators", () => {
             });
         });
     })
-    describe("Should allow us to work with both SCIENTIFIC and MIDINOTE representations concurrently as DUALS ", () => {
+    describe("Should allow us to work with both SCIENTIFIC and MIDINOTE representations concurrently as arrays of DUALS ", () => {
         describe(".formatDual ([]MIDINOTE, []SCIENTIFIC]) => []DUAL", () => {
             it("should zip [60, 62, 64, 66]  and ['C.4', 'D.4', 'E.4', 'Fs.4'] into an array of objects", () => {
                 const midinotes = [60, 62, 64, 66]

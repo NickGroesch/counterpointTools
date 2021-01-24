@@ -10,6 +10,7 @@ MIDINOTE pitchNotations, and their [], as integers eg. `60`
 DUAL [], which zip SCIENTIFIC and MIDINOTE notations into objects
 DELTA [], which are arrays of ingeters representing relative motion within a voice
 INTERVAL[], which are ***UGLY NOW*** [prefixSTR, qualitySTR, %b7doff, b7diff] eg. `["asc","perf",4,4]`
+* TODO change these to objects=> lots of dependencies on this structure in tests.js, so make jests first
 MOTION [], which are arrays of str e.g "parallel"
 
 ## INTERFACE METHODS (actually used) and their stacks

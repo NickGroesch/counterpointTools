@@ -251,7 +251,7 @@ const intervalCompare = (dualArray1, dualArray2) => {
     let shorterArray = dualArray1.length >= dualArray2.length ? dualArray2 : dualArray1
     let intervalArray = [];
     shorterArray.forEach((note, index) => {
-        let interval = measureInterval(dualArray2[index], dualArray1[index]);
+        let interval = measureInterval(dualArray1[index], dualArray2[index]);
         intervalArray.push(interval);
     });
     return intervalArray;
@@ -337,6 +337,7 @@ const abcify = (dualsArray, keySign) => {
     })
     return abcReturn
 }
+//√//const abcify = (dualsArray, keySign) => dualsArray.map(dual => stupifier(dual.pitch, keySign))
 
 const translators = {
     midiPitchClass,

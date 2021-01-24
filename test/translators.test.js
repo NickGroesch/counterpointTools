@@ -1,4 +1,4 @@
-const { it, expect } = require("@jest/globals");
+// const { it, expect, describe } = require("@jest/globals");
 const Translators = require("../translators");
 // STYLEGUIDE: use single quotes for javascript string values and 
 // double to delimit console strings (that may contain such values)
@@ -117,14 +117,11 @@ describe("Translators", () => {
             it(`should take [{ midi: 60, pitch: 'C.4' }, { midi: 62, pitch: 'D.4' }, { midi: 64, pitch: 'E.4' }] and return [["asc", "maj", "second", 2]["asc", "maj", "second", 2]]`, () => {
                 const duals = [{ midi: 60, pitch: 'C.4' }, { midi: 62, pitch: 'D.4' }, { midi: 64, pitch: 'E.4' }]
                 const intervals = Translators.deltaDual(duals)
-                console.log('case1', intervals)
-
                 expect(intervals).toEqual([["asc", "maj", "second", 2], ["asc", "maj", "second", 2]]);
             });
             it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return [["asc", "maj", "second", 2]]`, () => {
                 const duals = [{ midi: 67, pitch: 'G.4' }, { midi: 65, pitch: 'F.4' }, { midi: 67, pitch: 'G.4' }]
                 const intervals = Translators.deltaDual(duals)
-                console.log('case2', intervals)
                 expect(intervals).toEqual([["desc", "maj", "second", -2], ["asc", "maj", "second", 2]]);
             });
 
@@ -137,6 +134,34 @@ describe("Translators", () => {
                 expect(motions).toEqual(["contrary", "parallel"]);
             });
         });
+        describe(".intervalCompare ([]DUAL,[]DUAL) => []INTERVAL", () => { //TODO: add a base 7 type
+            it(`should take [{ midi: 60, pitch: 'C.4' },{ midi: 62, pitch: 'D.4' }] and return [["asc", "maj", "second", 2]]`, () => {
+                const duals1 = [{ midi: 60, pitch: 'C.4' }, { midi: 62, pitch: 'D.4' }, { midi: 64, pitch: 'E.4' }]
+                const duals2 = [{ midi: 67, pitch: 'G.4' }, { midi: 65, pitch: 'F.4' }, { midi: 67, pitch: 'G.4' }]
+                const intervals = Translators.intervalCompare(duals1, duals2)
+                expect(intervals).toEqual([["asc", "perf", "fifth", 7], ["asc", "min", "third", 3], ["asc", "min", "third", 3]]);
+            });
+        });
+    })
+    describe("Should provide a way to shed information for abcjs usage", () => {
+        describe("stupifier (SCIENTIFIC, KEYSIGNATURE)=>ABCNOTE", () => {
+            it("should take 'F#.5' in the key of G,strip accidental and return `F'`", () => {
+                const scientific = 'Fs.5'
+                const abced = Translators.stupifier(scientific, "G")
+                expect(abced).toBe(`F'`)
+            })
+        })
+        describe("abcify ([]DUALS, KEYSIGNATURE])=>[]ABCNOTE", () => {
+            it("should take 'F#.5' in the key of G,strip accidental and return `F'`", () => {
+                const duals = [
+                    { midi: 60, pitch: 'C.4' },
+                    { midi: 62, pitch: 'D.4' },
+                    { midi: 64, pitch: 'E.4' },
+                    { midi: 66, pitch: 'Fs.4' }]
+                const abced = Translators.abcify(duals, "G")
+                expect(abced).toEqual([`C`, `D`, `E`, `F`])
+            })
+        })
     })
 })
 // })

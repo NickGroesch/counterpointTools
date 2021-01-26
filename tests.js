@@ -2,6 +2,7 @@ const translators = require("./translators")
 // results will be an array composed of a boolean pass/fail, an array of relevant log messages, and
 // where applicable an array of positions that would be highlighted in the interactive data display 
 
+// TESTS RETURN [didPass, [info], [indexes of failure]]
 
 // General test for key: will need to be adapted to allow for leading tone in minor for extensibility
 const keyComb = (dualArray, key) => {
@@ -16,21 +17,23 @@ const keyComb = (dualArray, key) => {
         wrap(tonic, 10),
     ]
     let results = [false, [], []]
+    console.log(comb)
     dualArray.forEach((value, i) => {
+        console.log(comb.includes(value.midi % 12), value.midi % 12)
         if (comb.includes(value.midi % 12)) {
-            let index = `key comb fail position ${i} `
+            let index = `key comb fail position ${i}`
+            console.log(index, i, value.midi)
             results[1].push(index)
             results[2].push(i)
         }
     })
+    console.log(results)
     if (!results[1].length) {
         results[0] = true
         results[1] = "pass key comb"
     }
     return results
 }
-// console.log(keyComb([64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75], "E"))// fail [1,3,6,8,10]
-// console.log(keyComb([64, 66, 68, 69, 71, 73, 75], "E"))// pass 
 
 // // Cantus Tests
 // Length- cantus create only. submit.
@@ -41,10 +44,7 @@ const lengthCF = (dualArray) => {
     }
     return result
 }
-// console.log(lengthCF([64, 65, 66, 67, 68, 69, 70,]))//fail
-// console.log(lengthCF([64, 65, 66, 67, 68, 69, 70, 71]))//pass
-// console.log(lengthCF([64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79]))//pass
-// console.log(lengthCF([64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80]))//fail
+
 
 const deltaRange = deltaArray => {
     let result = [true, [], []]

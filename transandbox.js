@@ -1,13 +1,4 @@
 const translators = require("./translators.js");
-// have tested
-// .pitchArrayToMidi()
-// &&dependencies: pitchToMidi(), pitchClassToMidi(), pitchClassMidi{}
-// .transpostMidiArray()
-// .evalPitchArray()
-// &&dependencies: evalPitch(), pitchClass(), midiPitchClass{}
-// .formatDual()
-
-// TODO: remove dependencies from export??
 
 let play = [
     "C.5",

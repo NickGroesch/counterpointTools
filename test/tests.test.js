@@ -2,7 +2,7 @@ const Tests = require("../tests");
 
 describe("Counterpoint Tests", () => {
     describe("Should test for notes out of the key", () => {
-        describe(".keyComb ([]DUAL,KEY) => MIDINOTE ", () => {
+        describe(".keyComb ([]DUAL,KEY) => TESTRES ", () => {
             it("should pass if notes are in the key", () => {
                 const passingPitches = [
                     { midi: 64, pitch: 'E.4' },
@@ -41,7 +41,7 @@ describe("Counterpoint Tests", () => {
                     "key comb fail position 10",], [1, 3, 6, 8, 10]]);
             });
         });
-        describe(".lengthCF ([]DUAL)=> BOOL", () => {
+        describe(".lengthCF ([]DUAL)=> TESTRES", () => {
             it("should fail when too long", () => {
                 const tooManyDuals = [
                     { midi: 64, pitch: 'E.4' },
@@ -66,7 +66,7 @@ describe("Counterpoint Tests", () => {
                 expect(result).toEqual([false, "CF Length must be between 8-16 notes"])
             })
             it("should fail when too short", () => {
-                const tooManyDuals = [
+                const tooFewDuals = [
                     { midi: 64, pitch: 'E.4' },
                     { midi: 65, pitch: 'Es.4' },
                     { midi: 66, pitch: 'Fs.4' },
@@ -75,11 +75,11 @@ describe("Counterpoint Tests", () => {
                     { midi: 69, pitch: 'A.4' },
                     { midi: 70, pitch: 'As.4' },
                 ]
-                const result = Tests.lengthCF(tooManyDuals)
+                const result = Tests.lengthCF(tooFewDuals)
                 expect(result).toEqual([false, "CF Length must be between 8-16 notes"])
             })
             it("should pass when not too long ", () => {
-                const tooManyDuals = [
+                const manyDuals = [
                     { midi: 64, pitch: 'E.4' },
                     { midi: 65, pitch: 'Es.4' },
                     { midi: 66, pitch: 'Fs.4' },
@@ -97,11 +97,11 @@ describe("Counterpoint Tests", () => {
                     { midi: 78, pitch: 'Fs.5' },
                     { midi: 79, pitch: 'Fss.5' },
                 ]
-                const result = Tests.lengthCF(tooManyDuals)
+                const result = Tests.lengthCF(manyDuals)
                 expect(result).toEqual([true, "pass: length"])
             })
             it("should pass when not too short ", () => {
-                const tooManyDuals = [
+                const fewDuals = [
                     { midi: 64, pitch: 'E.4' },
                     { midi: 65, pitch: 'Es.4' },
                     { midi: 66, pitch: 'Fs.4' },
@@ -111,8 +111,28 @@ describe("Counterpoint Tests", () => {
                     { midi: 70, pitch: 'As.4' },
                     { midi: 71, pitch: 'B.4' },
                 ]
-                const result = Tests.lengthCF(tooManyDuals)
+                const result = Tests.lengthCF(fewDuals)
                 expect(result).toEqual([true, "pass: length"])
+            })
+        })
+        describe(".deltaRange ([]INTERVAL)=>TESTRES", () => { //TODO: replace stubs
+            it("should pass voices that don't move more than an octace at a time", () => {
+                const passStubs = [
+                    ["", "", "", [12]],
+                    ["", "", "", [0]],
+                    ["", "", "", [-12]]
+                ]
+                const result = Tests.deltaRange(passStubs)
+                expect(result).toEqual([true, ["pass: all deltas within octave"], []])
+            })
+            it("should fail voices that move more than an octace at a time", () => {
+                const passStubs = [
+                    ["", "", "", [13]],
+                    ["", "", "", [0]],
+                    ["", "", "", [-13]]
+                ]
+                const result = Tests.deltaRange(passStubs)
+                expect(result).toEqual([false, [`delta 0 greater than octave`, `delta 2 greater than octave`], [0, 2]])
             })
         })
     });

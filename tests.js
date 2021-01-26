@@ -17,12 +17,9 @@ const keyComb = (dualArray, key) => {
         wrap(tonic, 10),
     ]
     let results = [false, [], []]
-    console.log(comb)
     dualArray.forEach((value, i) => {
-        console.log(comb.includes(value.midi % 12), value.midi % 12)
         if (comb.includes(value.midi % 12)) {
             let index = `key comb fail position ${i}`
-            console.log(index, i, value.midi)
             results[1].push(index)
             results[2].push(i)
         }
@@ -40,8 +37,10 @@ const keyComb = (dualArray, key) => {
 const lengthCF = (dualArray) => {
     let result = [true, "pass: length"]
     if (!(dualArray.length < 17 && dualArray.length > 7)) {
-        result = [false, "CF Length must be between 8-16 notes"]
+        result[0] = false
+        result[1] = "CF Length must be between 8-16 notes"
     }
+    //result[2]= dualArray.lentch
     return result
 }
 
@@ -54,21 +53,9 @@ const deltaRange = deltaArray => {
             result[2].push(index)
         }
     })
-    if (!result[1].length) { result[1] = "pass: all deltas within octave" } else { result[0] = false }
+    if (!result[1].length) { result[1] = ["pass: all deltas within octave"] } else { result[0] = false }
     return result
 }
-// let deltaRangeTestPass = [
-//     ["", "", "", [12]],
-//     ["", "", "", [0]],
-//     ["", "", "", [-12]]
-// ]
-// let deltaRangeTestFail = [
-//     ["", "", "", [13]],
-//     ["", "", "", [0]],
-//     ["", "", "", [-13]]
-// ]
-// console.log(deltaRange(deltaRangeTestPass))//pass
-// console.log(deltaRange(deltaRangeTestFail))//fail [0,2]
 
 const deltaDissonantLeaps = deltaArray => {
     let result = [false, [], []]
